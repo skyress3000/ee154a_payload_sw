@@ -21,6 +21,8 @@ static telem_point_t sample_z_mag();          // record MPU9250 z magnetometer v
 static telem_point_t sample_latitude();       // record GPS latitude
 static telem_point_t sample_longitude();      // record GPS longitude
 static telem_point_t sample_altitude();       // record GPS altitude
+static telem_point_t sample_speed();          // record GPS speed
+static telem_point_t sample_time();           // record GPS time
 
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
