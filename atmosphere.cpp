@@ -16,7 +16,7 @@ bool atmosphere_init(){
   bool int_success = internalSensor.beginI2C();
 
   // Return true only if the external AND internal sensors are successfully initialized
-  return(ext_success && int_success);
+  return (ext_success && int_success);
 }
 
 telem_point_t sample_pressure(){

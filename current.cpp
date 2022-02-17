@@ -20,5 +20,5 @@ telem_point_t sample_current(){
   reading /= N_AVG;
   data.data.data_value = (reading - CURRENT_OFFSET)/CURRENT_GAIN;
   
-  return(data);
+  return data;
 }
