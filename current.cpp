@@ -1,10 +1,10 @@
 #include "telemetry.h"
 #include "current.h"
 
-void current_init(){
+bool current_init(){
   // Set the current pin as an input
   pinMode(CURRENT_PIN, INPUT);
-  return;
+  return true;
 }
 
 telem_point_t sample_current(){
