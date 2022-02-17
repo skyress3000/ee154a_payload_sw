@@ -140,6 +140,15 @@ telem_channel_t telem_channels[] = {
 
 void init_telemetry(char* flight_name) {
   // concat flight name with channel name into each channel log file name
+  for(int i = 0; i < N_TELEM_CHANNELS; i++) {
+    // start with flight name
+    strncpy(telem_channels[i].log_file_name, flight_name, 128);
+    // then add _[channel name]
+    strncat(telem_channels[i].log_file_name, "_", 128-strlen(telem_channels[i].log_file_name));
+    strncat(telem_channels[i].log_file_name, telem_channels[i].name, 128-strlen(telem_channels[i].log_file_name));
+  }
+
+  // init sensors  
   // init interrupt?
 }
 
