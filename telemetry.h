@@ -3,6 +3,10 @@
 #ifndef TELEMETRY_H
 #define TELEMETRY_H
 
+// FUNCTIONS
+
+void init_telemetry();
+
 // CONSTANTS
 
 // data rate shared by all atmospheric telemetry channels (in ms)

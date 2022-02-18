@@ -4,9 +4,7 @@
 #include "IMU.h"
 #include "GPS.h"
 #include "voc.h"
-
-#define N_LED 3
-const int LEDpins[] = {9, 10, 11};
+#include "LED.h"
 
 void setup() {
   Serial.begin(9600);

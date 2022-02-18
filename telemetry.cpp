@@ -7,6 +7,7 @@
 #include "atmosphere.h"
 #include "IMU.h"
 #include "voc.h"
+#include "LED.h"
 
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
@@ -173,7 +174,8 @@ void init_telemetry() {
     delay(500);
   }
 
-  String flight_name = String(flightname());
+  char flight_name[16];
+  sprintf(flight_name, "%d", flightname());
 
   // concat flight name with channel name into each channel log file name
   for(int i = 0; i < N_TELEM_CHANNELS; i++) {

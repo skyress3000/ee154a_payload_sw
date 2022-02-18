@@ -28,7 +28,7 @@ void check_GPS_data(){
 
   // Keep polling until location, altitude, speed, and time are updated
   while(!(tinyGPS.location.isUpdated() || tinyGPS.altitude.isUpdated() || tinyGPS.speed.isUpdated() || tinyGPS.time.isUpdated())){
-    if(gpsPort.available() > 0)){
+    if(gpsPort.available() > 0){
       tinyGPS.encode(gpsPort.read());
     }
   }
@@ -121,9 +121,9 @@ telem_point_t sample_time(){
   min = tinyGPS.time.minute();
   sec = tinyGPS.time.second();
 
-  float time = sec + 60*min + 60*60*hr
+  float time = sec + 60*min + 60*60*hr;
   
-  data.data.data_value = time
+  data.data.data_value = time;
   data.timestamp = millis();
 
   sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
@@ -140,7 +140,7 @@ uint64_t flightname(){
   }
   sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
 
-  name = tinyGPS.date.value() * 10**9 + tinyGPS.time.value();
+  name = tinyGPS.date.value() * 1000000000 + tinyGPS.time.value();
 
   return name;
 }
