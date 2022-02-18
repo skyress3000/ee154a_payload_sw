@@ -1,6 +1,6 @@
 #include "telemetry.h"
 #include "IMU.h"
-#include <SparkFunMPU9250-DMP.h>
+#include "MPU9250.h"
 
 MPU9250_DMP imu;
 
