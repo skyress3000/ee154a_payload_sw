@@ -6,6 +6,7 @@
 #include "current.h"
 #include "atmosphere.h"
 #include "IMU.h"
+#include "voc.h"
 
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
@@ -121,6 +122,20 @@ telem_channel_t telem_channels[] = {
     GPS_SAMPLE_RATE, // 0.2 Hz
     0
   },
+  {
+    "SGP_TVOC",
+    "", // needs to be initialized
+    sample_tvoc,
+    TVOC_SAMPLE_RATE, // 10 Hz
+    0
+  },
+    {
+    "SGP_eCO2",
+    "", // needs to be initialized
+    sample_eco2,
+    TVOC_SAMPLE_RATE, // 10 Hz
+    0
+  },
 };
 
 void init_telemetry() {
@@ -142,6 +157,10 @@ void init_telemetry() {
   success = gps_init();
   all_success &= success;
   Serial.println("GPS: " + String(success));
+
+  success = tvoc_init();
+  all_success &= success;
+  Serial.println("TVOC: " + String(success));
   
   while(!all_success){
     for(int i = 0; i < N_LED; i++){

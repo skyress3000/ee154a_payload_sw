@@ -10,9 +10,11 @@
 #define BAT_I_SAMPLE_RATE 100 // 10 Hz
 // data rate shared by all GPS telemetry channels (in ms)
 #define GPS_SAMPLE_RATE 5000 // 0.2 Hz
+// data rate for reading from VOC sensor (in ms)
+#define TVOC_SAMPLE_RATE 100 // 10 Hz
 
 // total number of telemetry channels
-#define N_TELEM_CHANNELS 16
+#define N_TELEM_CHANNELS 18
 
 // TYPEDEFS
 
