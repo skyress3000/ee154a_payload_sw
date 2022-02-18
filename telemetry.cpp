@@ -143,6 +143,8 @@ void init_telemetry() {
   bool success, all_success;
   all_success = true;
 
+  Serial.println("Init");
+
   success = current_init();
   all_success &= success;
   Serial.println("Battery Current: " + String(success));

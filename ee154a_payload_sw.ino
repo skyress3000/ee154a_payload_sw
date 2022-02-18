@@ -7,13 +7,22 @@
 #include "LED.h"
 
 void setup() {
-  Serial.begin(9600);
+  // Serial.begin(9600);
   
   for(int i = 0; i < N_LED; i++){
     pinMode(LEDpins[i], OUTPUT);
   }
+  for(int i = 0; i < N_LED; i++){
+    digitalWrite(LEDpins[i], HIGH);
+    delay(500);
+  }
+  for(int i = 0; i < N_LED; i++){
+    digitalWrite(LEDpins[i], LOW);
+    delay(500);
+  }
+  // Serial.println("hewwo");
   
-  init_telemetry();
+  // init_telemetry();
 
 }
 
