@@ -1,5 +1,6 @@
 #include "telemetry.h"
 #include "current.h"
+#include <Arduino.h>
 
 bool current_init(){
   // Set the current pin as an input

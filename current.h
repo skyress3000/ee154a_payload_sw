@@ -1,4 +1,5 @@
 #include "telemetry.h"
+#include <Arduino.h>
 
 // CONSTANTS
 #define CURRENT_PIN    A0
