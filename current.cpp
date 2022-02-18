@@ -14,7 +14,7 @@ telem_point_t sample_current(){
   int reading = 0;
 
   for(int i = 0; i < N_AVG; i++){
-    reading += analogRead(CURENT_PIN);
+    reading += analogRead(CURRENT_PIN);
   }
   data.timestamp = millis();
 

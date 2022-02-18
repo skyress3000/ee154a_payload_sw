@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include "Adafruit_SGP30.h"
+#include "voc.h"
 
 Adafruit_SGP30 sgp;
 
