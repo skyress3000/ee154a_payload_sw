@@ -48,7 +48,7 @@ telem_point_t sample_latitude(){
     check_GPS_data(); // Update the location
   }
   
-  data.data.data_value = gps.location.lat();
+  data.data.data_value = tinyGPS.location.lat();
   data.timestamp = millis();
 
   sampleFlags |= (1<<LAT_BIT); // Set the bit to indicate we read the latitude
@@ -65,7 +65,7 @@ telem_point_t sample_longitude(){
     check_GPS_data(); // Update the location
   }
   
-  data.data.data_value = gps.location.lng();
+  data.data.data_value = tinyGPS.location.lng();
   data.timestamp = millis();
 
   sampleFlags |= (1<<LNG_BIT); // Set the bit to indicate we read the longitude
@@ -82,7 +82,7 @@ telem_point_t sample_altitude(){
     check_GPS_data(); // Update the altitude
   }
   
-  data.data.data_value = gps.altitude.meters();
+  data.data.data_value = tinyGPS.altitude.meters();
   data.timestamp = millis();
 
   sampleFlags |= (1<<ALT_BIT); // Set the bit to indicate we read the altitude
@@ -99,7 +99,7 @@ telem_point_t sample_speed(){
     check_GPS_data(); // Update the speed
   }
   
-  data.data.data_value = gps.speed.mps();
+  data.data.data_value = tinyGPS.speed.mps();
   data.timestamp = millis();
 
   sampleFlags |= (1<<SPD_BIT); // Set the bit to indicate we read the speed
@@ -117,9 +117,9 @@ telem_point_t sample_time(){
     check_GPS_data(); // Update the time
   }
 
-  hr = gps.time.hour();
-  min = gps.time.minute();
-  sec = gps.time.second();
+  hr = tinyGPS.time.hour();
+  min = tinyGPS.time.minute();
+  sec = tinyGPS.time.second();
 
   float time = sec + 60*min + 60*60*hr
   
@@ -129,4 +129,18 @@ telem_point_t sample_time(){
   sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
 
   return data;
+}
+
+uint64_t flightname(){
+  // Return a long that has the date and time
+  uint64_t name = 0;
+
+  if(sampleFlags & (1<<TIM_BIT)){
+    check_GPS_data(); // Update the time
+  }
+  sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
+
+  name = tinyGPS.date.value() * 10**9 + tinyGPS.time.value();
+
+  return name;
 }

@@ -2,27 +2,10 @@
 #include <SD.h>
 
 #include "telemetry.h"
-
-// telemetry sampling functions
-static telem_point_t sample_current();        // record battery current
-static telem_point_t sample_pressure();       // record BME280 pressure
-static telem_point_t sample_humidity();       // record BME280 humidity
-static telem_point_t sample_temp_internal();  // record BME280 temperature (internal sensor)
-static telem_point_t sample_temp_external();  // record BME280 temperature (external sensor)
-static telem_point_t sample_x_accel();        // record MPU9250 x acceleration
-static telem_point_t sample_y_accel();        // record MPU9250 y acceleration
-static telem_point_t sample_z_accel();        // record MPU9250 z acceleration
-static telem_point_t sample_x_gyro();         // record MPU9250 x gyro value
-static telem_point_t sample_y_gyro();         // record MPU9250 y gyro value
-static telem_point_t sample_z_gyro();         // record MPU9250 z gyro value
-static telem_point_t sample_x_mag();          // record MPU9250 x magnetometer value
-static telem_point_t sample_y_mag();          // record MPU9250 y magnetometer value
-static telem_point_t sample_z_mag();          // record MPU9250 z magnetometer value
-static telem_point_t sample_latitude();       // record GPS latitude
-static telem_point_t sample_longitude();      // record GPS longitude
-static telem_point_t sample_altitude();       // record GPS altitude
-static telem_point_t sample_speed();          // record GPS speed
-static telem_point_t sample_time();           // record GPS time
+#include "GPS.h"
+#include "current.h"
+#include "atmosphere.h"
+#include "IMU.h"
 
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
@@ -140,7 +123,39 @@ telem_channel_t telem_channels[] = {
   },
 };
 
-void init_telemetry(char* flight_name) {
+void init_telemetry() {
+  bool success, all_success;
+  all_success = true;
+
+  success = current_init();
+  all_success &= success;
+  Serial.println("Battery Current: " + String(success));
+
+  success = atmosphere_init();
+  all_success &= success;
+  Serial.println("BME280 sensors: " + String(success)); 
+
+  success = imu_init();
+  all_success &= success;
+  Serial.println("MPU9250_DMP: " + String(success)); 
+
+  success = gps_init();
+  all_success &= success;
+  Serial.println("GPS: " + String(success));
+  
+  while(!all_success){
+    for(int i = 0; i < N_LED; i++){
+      digitalWrite(LEDpins[i], HIGH);
+    }
+    delay(500);
+    for(int i = 0; i < N_LED; i++){
+      digitalWrite(LEDpins[i], LOW);
+    }
+    delay(500);
+  }
+
+  String flight_name = String(flightname());
+
   // concat flight name with channel name into each channel log file name
   for(int i = 0; i < N_TELEM_CHANNELS; i++) {
     // start with flight name
@@ -150,8 +165,25 @@ void init_telemetry(char* flight_name) {
     strncat(telem_channels[i].log_file_name, telem_channels[i].name, 128-strlen(telem_channels[i].log_file_name));
   }
 
-  // init sensors  
   // init interrupt?
+}
+
+// store a single datapoint on the SD card, in the log file for the specified channel
+// timestamp is stored as a 32-bit value followed by 32-bit float data point
+static void log_telem_point(telem_point_t data, telem_channel_t* channel) {
+  File logfile = SD.open(channel->log_file_name, FILE_WRITE);
+  // telemetry data and timestamp into bytes
+  uint8_t data_buf[4];
+  uint8_t timestamp_buf[4];
+  for(int i = 0; i < 4; i++) {
+    // get ith byte of both
+    data_buf[i] = (data.data.data_bits >> (8*i)) & 0xFF;
+    timestamp_buf[i] = (data.timestamp >> (8*i)) & 0xFF;
+  }
+  // write data to logfile
+  logfile.write(timestamp_buf, 4);
+  logfile.write(data_buf, 4);
+  logfile.close();
 }
 
 void do_telemetry_sampling() {
@@ -167,22 +199,4 @@ void do_telemetry_sampling() {
       log_telem_point(data_point, &telem_channels[i]);
     }
   }
-}
-
-// store a single datapoint on the SD card, in the log file for the specified channel
-// timestamp is stored as a 32-bit value followed by 32-bit float data point
-void log_telem_point(telem_point_t data, telem_channel_t* channel) {
-  File logfile = SD.open(channel->log_file_name, FILE_WRITE);
-  // telemetry data and timestamp into bytes
-  uint8_t data_buf[4];
-  uint8_t timestamp_buf[4];
-  for(int i = 0; i < 4; i++) {
-    // get ith byte of both
-    data_buf[i] = (data.data.data_bits >> (8*i)) & 0xFF;
-    timestamp_buf[i] = (data.timestamp >> (8*i)) & 0xFF;
-  }
-  // write data to logfile
-  logfile.write(timestamp_buf, 4);
-  logfile.write(data_buf, 4);
-  logfile.close();
 }

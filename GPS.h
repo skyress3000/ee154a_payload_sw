@@ -12,6 +12,7 @@
 // FUNCTIONS
 bool gps_init();
 void check_GPS_data();
+uint64_t flightname();
 telem_point_t sample_latitude();       // record GPS latitude
 telem_point_t sample_longitude();      // record GPS longitude
 telem_point_t sample_altitude();       // record GPS altitude

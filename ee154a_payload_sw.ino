@@ -1,5 +1,20 @@
+#include "telemetry.h"
+#include "current.h"
+#include "atmosphere.h"
+#include "IMU.h"
+#include "GPS.h"
+
+#define N_LED 3
+const int LEDpins[] = {9, 10, 11}
+
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
+  
+  for(int i = 0; i < N_LED; i++){
+    pinMode(LEDpins[i], OUTPUT);
+  }
+  
+  init_telemetry();
 
 }
 

@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 // CONSTANTS
 
 // data rate shared by all atmospheric telemetry channels (in ms)
@@ -20,7 +22,7 @@ typedef struct {
   union data {          // recorded data
     float data_value;   // floating point value of the measurement
     uint32_t data_bits; // bits of the float value
-  }
+  };
 } telem_point_t;
 
 // a telemetry channel
