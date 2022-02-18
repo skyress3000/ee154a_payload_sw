@@ -1,24 +1,24 @@
 #include "telemetry.h"
 #include "IMU.h"
 #include "MPU9250.h"
+#include <Wire.h>
+#include <SPI.h>
 
-MPU9250_DMP imu;
+#define MPU9250_ADDRESS MPU9250_ADDRESS_AD0
+#define I2Cclock 400000
+#define I2Cport Wire
+MPU9250 imu(MPU9250_ADDRESS, I2Cport, I2Cclock);
 
 bool imu_init(){
-  // Initialize the IMU
-  bool success = (imu.begin() == INV_SUCCESS)
-
-  // Return false if we didn't successfully initialize
-  if (!success){
-    return false;
-  }
-  // Otherwise, keep initializing the IMU
-  imu.setSensors(ALL_SENSORS);
-  imu.setGyroFSR(GYRO_FSR);
-  imu.setAccelFSR(ACC_FSR);
-  imu.setLPF(LPF_HZ);
-  imu.setSampleRate(ACC_GYRO_RATE);
-  imu.setCompassSampleRate(MAG_RATE);
+  // Initialize I2C
+  Wire.begin();
+  // Initialize IMU
+  imu.initMPU9250();
+  imu.initAK8963(imu.factoryMagCalibration);
+  imu.getAres();
+  imu.getGres();
+  imu.getMres();
+  imu.magCalMPU9250(imu.magBias, imu.magScale);
 
   return true;
 }
@@ -28,13 +28,14 @@ telem_point_t sample_x_accel(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_ACCEL);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readAccelData(imu.accelCount); 
+  imu.ax = (float)imu.accelCount[0] * imu.aRes;
   data.timestamp = millis();
-  data.data.data_value = imu.calcAccel(imu.ax);
+  data.data.data_value = imu.ax;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_y_accel(){
@@ -42,13 +43,14 @@ telem_point_t sample_y_accel(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_ACCEL);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readAccelData(imu.accelCount);
+  imu.ay = (float)imu.accelCount[1] * imu.aRes;
   data.timestamp = millis();
-  data.data.data_value = imu.calcAccel(imu.ay);
+  data.data.data_value = imu.ay;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_z_accel(){
@@ -56,13 +58,14 @@ telem_point_t sample_z_accel(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_ACCEL);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readAccelData(imu.accelCount);
+  imu.az = (float)imu.accelCount[2] * imu.aRes;
   data.timestamp = millis();
-  data.data.data_value = imu.calcAccel(imu.az);
+  data.data.data_value = imu.az;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_x_gyro(){
@@ -70,13 +73,14 @@ telem_point_t sample_x_gyro(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_GYRO);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readGyroData(imu.gyroCount);
+  imu.gx = (float)imu.gyroCount[0] * imu.gRes;
   data.timestamp = millis();
-  data.data.data_value = imu.calcGyro(imu.gx);
+  data.data.data_value = imu.gx;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_y_gyro(){
@@ -84,13 +88,14 @@ telem_point_t sample_y_gyro(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_GYRO);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readGyroData(imu.gyroCount);
+  imu.gy = (float)imu.gyroCount[1] * imu.gRes;
   data.timestamp = millis();
-  data.data.data_value = imu.calcGyro(imu.gy);
+  data.data.data_value = imu.gy;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_z_gyro(){
@@ -98,13 +103,14 @@ telem_point_t sample_z_gyro(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_GYRO);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readGyroData(imu.gyroCount);
+  imu.gz = (float)imu.gyroCount[2] * imu.gRes;
   data.timestamp = millis();
-  data.data.data_value = imu.calcGyro(imu.gz);
+  data.data.data_value = imu.gz;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_x_mag(){
@@ -112,13 +118,14 @@ telem_point_t sample_x_mag(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_COMPASS);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readMagData(imu.magCount);
+  imu.mx = (float)imu.magCount[0] * imu.mRes * imu.factoryMagCalibration[0] - imu.magBias[0];
   data.timestamp = millis();
-  data.data.data_value = imu.calcMag(imu.mx);
+  data.data.data_value = imu.mx;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_y_mag(){
@@ -126,13 +133,14 @@ telem_point_t sample_y_mag(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_COMPASS);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readMagData(imu.magCount);
+  imu.my = (float)imu.magCount[1] * imu.mRes * imu.factoryMagCalibration[1] - imu.magBias[1];
   data.timestamp = millis();
-  data.data.data_value = imu.calcMag(imu.my);
+  data.data.data_value = imu.my;
 
-  return data
+  return data;
 }
 
 telem_point_t sample_z_mag(){
@@ -140,11 +148,12 @@ telem_point_t sample_z_mag(){
   telem_point_t data;
 
   // Wait for data to be ready, then update
-  while(!imu.dataReady()){}
-
-  imu.update(UPDATE_COMPASS);
+  while(!(imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)){}
+  // update
+  imu.readMagData(imu.magCount);
+  imu.mz = (float)imu.magCount[2] * imu.mRes * imu.factoryMagCalibration[2] - imu.magBias[2];
   data.timestamp = millis();
-  data.data.data_value = imu.calcMag(imu.mz);
+  data.data.data_value = imu.mz;
 
-  return data
+  return data;
 }
