@@ -177,7 +177,7 @@ static void log_telem_point(telem_point_t data, telem_channel_t* channel) {
   uint8_t timestamp_buf[4];
   for(int i = 0; i < 4; i++) {
     // get ith byte of both
-    data_buf[i] = (data.data.data_bits >> (8*i)) & 0xFF;
+    data_buf[i] = (uint8_t) (data.data.data_bits >> (8*i)) & 0xFF;
     timestamp_buf[i] = (data.timestamp >> (8*i)) & 0xFF;
   }
   // write data to logfile

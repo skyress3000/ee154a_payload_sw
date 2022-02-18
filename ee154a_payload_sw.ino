@@ -5,7 +5,7 @@
 #include "GPS.h"
 
 #define N_LED 3
-const int LEDpins[] = {9, 10, 11}
+const int LEDpins[] = {9, 10, 11};
 
 void setup() {
   Serial.begin(9600);
