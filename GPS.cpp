@@ -12,8 +12,15 @@ bool gps_init(){
   // Wait for it to be available
   while (!gpsPort.available()){}
 
-  // Read from the serial port once it is available
+
+  // Read from the serial port once it is available until we have 3 or more satellites 
   tinyGPS.encode(gpsPort.read());
+  while(tinyGPS.satellites.value() < 3 || !tinyGPS.satellites.isValid()){
+    tinyGPS.encode(gpsPort.read());
+    Serial.println("Searching, found " + String(tinyGPS.satellites.value()) + " satellites");
+  }
+
+  Serial.println("Lock achieved with " + String(tinyGPS.satellites.value()) + " satellites");  
 
   // Clear sampleFlags to indicate nothing has been sampled from this reading
   sampleFlags = 0;
@@ -23,7 +30,6 @@ bool gps_init(){
 
 void check_GPS_data(){
   // Poll GPS until the location data updates
-
   gpsPort.flush(); // Wait for current communication to clear
 
   // Keep polling until location, altitude, speed, and time are updated
@@ -135,9 +141,7 @@ uint64_t flightname(){
   // Return a long that has the date and time
   uint64_t name = 0;
 
-  if(sampleFlags & (1<<TIM_BIT)){
-    check_GPS_data(); // Update the time
-  }
+  check_GPS_data(); // Update the time
   sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
 
   name = tinyGPS.date.value() * 1000000000 + tinyGPS.time.value();

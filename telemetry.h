@@ -6,6 +6,7 @@
 // FUNCTIONS
 
 void init_telemetry();
+void do_telemetry_sampling();
 
 // CONSTANTS
 
@@ -22,6 +23,9 @@ void init_telemetry();
 
 // total number of telemetry channels
 #define N_TELEM_CHANNELS 18
+
+#define CS_PIN 10
+#define ERR_PERIOD 500
 
 // TYPEDEFS
 

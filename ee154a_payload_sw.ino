@@ -7,7 +7,7 @@
 #include "LED.h"
 
 void setup() {
-  // Serial.begin(9600);
+  Serial.begin(9600);
   
   for(int i = 0; i < N_LED; i++){
     pinMode(LEDpins[i], OUTPUT);
@@ -20,13 +20,12 @@ void setup() {
     digitalWrite(LEDpins[i], LOW);
     delay(500);
   }
-  // Serial.println("hewwo");
+  Serial.println("hewwo");
   
-  // init_telemetry();
+  init_telemetry();
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  do_telemetry_sampling();
 }

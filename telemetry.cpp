@@ -157,28 +157,42 @@ void init_telemetry() {
   all_success &= success;
   Serial.println("MPU9250_DMP: " + String(success)); 
 
+  success = tvoc_init();
+  all_success &= success;
+  Serial.println("TVOC: " + String(success));
+
+  if(all_success){
+    digitalWrite(LEDpins[0], HIGH); // indicate the sensors initialized
+  }
+  else{
+    while(true){ // Blink the LED to indicate failure
+      digitalWrite(LEDpins[0], HIGH);
+      delay(ERR_PERIOD);
+      digitalWrite(LEDpins[0], LOW);
+      delay(ERR_PERIOD);
+    }
+  }
+
   success = gps_init();
   all_success &= success;
   Serial.println("GPS: " + String(success));
 
-  success = tvoc_init();
-  all_success &= success;
-  Serial.println("TVOC: " + String(success));
-  
-  while(!all_success){
-    for(int i = 0; i < N_LED; i++){
-      digitalWrite(LEDpins[i], HIGH);
-    }
-    delay(500);
-    for(int i = 0; i < N_LED; i++){
-      digitalWrite(LEDpins[i], LOW);
-    }
-    delay(500);
+  if(all_success){
+    digitalWrite(LEDpins[1], HIGH); // indicate the GPS initialized
   }
-
+  else{
+    while(true){ // Blink the LED to indicate failure
+      digitalWrite(LEDpins[1], HIGH);
+      delay(ERR_PERIOD);
+      digitalWrite(LEDpins[1], LOW);
+      delay(ERR_PERIOD);
+    }
+  }
+  
   char flight_name[16];
   sprintf(flight_name, "%d", flightname());
-
+  Serial.println(flight_name);
+ 
   // concat flight name with channel name into each channel log file name
   for(int i = 0; i < N_TELEM_CHANNELS; i++) {
     // start with flight name
@@ -186,6 +200,23 @@ void init_telemetry() {
     // then add _[channel name]
     strncat(telem_channels[i].log_file_name, "_", 128-strlen(telem_channels[i].log_file_name));
     strncat(telem_channels[i].log_file_name, telem_channels[i].name, 128-strlen(telem_channels[i].log_file_name));
+  }
+
+  // Initialize SD card
+  success = SD.begin(CS_PIN);
+  all_success &= success;
+  Serial.println("SD Card: " + String(success));
+  
+  if(all_success){
+    digitalWrite(LEDpins[2], HIGH); // indicate the SD card initialized
+  }
+  else{
+    while(true){ // Blink the LED to indicate failure
+      digitalWrite(LEDpins[2], HIGH);
+      delay(ERR_PERIOD);
+      digitalWrite(LEDpins[2], LOW);
+      delay(ERR_PERIOD);
+    }
   }
 
   // init interrupt?
