@@ -164,14 +164,14 @@ void init_telemetry() {
   if(all_success){
     digitalWrite(LEDpins[0], HIGH); // indicate the sensors initialized
   }
-  else{
-    while(true){ // Blink the LED to indicate failure
-      digitalWrite(LEDpins[0], HIGH);
-      delay(ERR_PERIOD);
-      digitalWrite(LEDpins[0], LOW);
-      delay(ERR_PERIOD);
-    }
-  }
+  // else{
+  //   while(true){ // Blink the LED to indicate failure
+  //     digitalWrite(LEDpins[0], HIGH);
+  //     delay(ERR_PERIOD);
+  //     digitalWrite(LEDpins[0], LOW);
+  //     delay(ERR_PERIOD);
+  //   }
+  // }
 
   success = gps_init();
   all_success &= success;
@@ -180,16 +180,16 @@ void init_telemetry() {
   if(all_success){
     digitalWrite(LEDpins[1], HIGH); // indicate the GPS initialized
   }
-  else{
-    while(true){ // Blink the LED to indicate failure
-      digitalWrite(LEDpins[1], HIGH);
-      delay(ERR_PERIOD);
-      digitalWrite(LEDpins[1], LOW);
-      delay(ERR_PERIOD);
-    }
-  }
+  // else{
+  //   while(true){ // Blink the LED to indicate failure
+  //     digitalWrite(LEDpins[1], HIGH);
+  //     delay(ERR_PERIOD);
+  //     digitalWrite(LEDpins[1], LOW);
+  //     delay(ERR_PERIOD);
+  //   }
+  // }
   
-  char flight_name[16];
+  char flight_name[30];
   sprintf(flight_name, "%d", flightname());
   Serial.println(flight_name);
  
@@ -210,14 +210,14 @@ void init_telemetry() {
   if(all_success){
     digitalWrite(LEDpins[2], HIGH); // indicate the SD card initialized
   }
-  else{
-    while(true){ // Blink the LED to indicate failure
-      digitalWrite(LEDpins[2], HIGH);
-      delay(ERR_PERIOD);
-      digitalWrite(LEDpins[2], LOW);
-      delay(ERR_PERIOD);
-    }
-  }
+  // else{
+  //   while(true){ // Blink the LED to indicate failure
+  //     digitalWrite(LEDpins[2], HIGH);
+  //     delay(ERR_PERIOD);
+  //     digitalWrite(LEDpins[2], LOW);
+  //     delay(ERR_PERIOD);
+  //   }
+  // }
 
   // init interrupt?
 }

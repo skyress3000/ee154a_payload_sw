@@ -20,8 +20,7 @@ void setup() {
     digitalWrite(LEDpins[i], LOW);
     delay(500);
   }
-  Serial.println("hewwo");
-  
+ 
   init_telemetry();
 
 }

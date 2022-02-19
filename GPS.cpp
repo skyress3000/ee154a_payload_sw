@@ -144,7 +144,7 @@ uint64_t flightname(){
   check_GPS_data(); // Update the time
   sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
 
-  name = tinyGPS.date.value() * 1000000000 + tinyGPS.time.value();
+  name = tinyGPS.date.value() * 1000000000000 + tinyGPS.time.value();
 
   return name;
 }
