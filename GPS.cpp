@@ -55,7 +55,7 @@ telem_point_t sample_latitude(){
 
   data.data.data_value = 3.14159;
   data.timestamp = millis();  
-  return;
+  return data;
 
   // Check if we have sampled the reading
   if(sampleFlags & (1<<LAT_BIT)){
@@ -76,7 +76,7 @@ telem_point_t sample_longitude(){
 
   data.data.data_value = 3.14159;
   data.timestamp = millis();  
-  return;
+  return data;
 
   // Check if we have sampled the reading
   if(sampleFlags & (1<<LNG_BIT)){
@@ -97,7 +97,7 @@ telem_point_t sample_altitude(){
 
   data.data.data_value = 3.14159;
   data.timestamp = millis();  
-  return;
+  return data;
 
   // Check if we have sampled the reading
   if(sampleFlags & (1<<ALT_BIT)){
@@ -118,7 +118,7 @@ telem_point_t sample_speed(){
 
   data.data.data_value = 3.14159;
   data.timestamp = millis();  
-  return;
+  return data;
 
   // Check if we have sampled the reading
   if(sampleFlags & (1<<SPD_BIT)){
@@ -139,7 +139,7 @@ telem_point_t sample_time(){
 
   data.data.data_value = 3.14159;
   data.timestamp = millis();  
-  return;
+  return data;
 
   uint8_t hr, min, sec;
 

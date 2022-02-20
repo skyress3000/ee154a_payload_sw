@@ -9,6 +9,8 @@
 void setup() {
   Serial.begin(9600);
   
+  pinMode(BUZZ_PIN, OUTPUT);
+
   for(int i = 0; i < N_LED; i++){
     pinMode(LEDpins[i], OUTPUT);
   }
@@ -20,7 +22,10 @@ void setup() {
     digitalWrite(LEDpins[i], LOW);
     delay(500);
   }
- 
+  digitalWrite(BUZZ_PIN, HIGH);
+  delay(100);
+  digitalWrite(BUZZ_PIN, LOW);
+
   init_telemetry();
 
 }
