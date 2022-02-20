@@ -13,8 +13,9 @@ telem_point_t sample_current(){
   data.timestamp = millis();
 
   reading /= N_AVG;
-  data.data.data_value = (reading - CURRENT_OFFSET)/CURRENT_GAIN;
-  
+  int read = reading;
+  data.data.data_value = (read - CURRENT_OFFSET)/CURRENT_GAIN;
+    
   return data;
 }
 
