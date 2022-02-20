@@ -1,5 +1,6 @@
 #include <SPI.h>
 #include <SD.h>
+#include <stdint.h>
 
 #include "telemetry.h"
 #include "GPS.h"
@@ -12,77 +13,77 @@
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
   {
-    "BATTERY_CURRENT",
+    "BAT_CUR",
     "", // needs to be initialized
     sample_current,
     BAT_I_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "BME280_PRESSURE",
+    "PRESS",
     "", // needs to be initialized
     sample_pressure,
     ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "BME280_HUMIDITY",
+    "HUMID",
     "", // needs to be initialized
     sample_humidity,
     ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "BME280_TEMP_INTERNAL",
+    "T_INT",
     "", // needs to be initialized
     sample_temp_internal,
     ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "BME280_TEMP_EXTERNAL",
+    "T_EXT",
     "", // needs to be initialized
     sample_temp_external,
     ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "MPU9250_X_ACCEL",
+    "X_ACCEL",
     "", // needs to be initialized
     sample_x_accel,
     IMU_SAMPLE_RATE, // 100 Hz
     0
   },
   {
-    "MPU9250_Y_ACCEL",
+    "Y_ACCEL",
     "", // needs to be initialized
     sample_y_accel,
     IMU_SAMPLE_RATE, // 100 Hz
     0
   },
   {
-    "MPU9250_Z_ACCEL",
+    "Z_ACCEL",
     "", // needs to be initialized
     sample_z_accel,
     IMU_SAMPLE_RATE, // 100 Hz
     0
   },
   {
-    "MPU9250_X_GYRO",
+    "X_GYRO",
     "", // needs to be initialized
     sample_x_gyro,
     IMU_SAMPLE_RATE, // 100 Hz
     0
   },
   {
-    "MPU9250_Y_GYRO",
+    "Y_GYRO",
     "", // needs to be initialized
     sample_y_gyro,
     IMU_SAMPLE_RATE, // 100 Hz
     0
   },
   {
-    "MPU9250_Z_GYRO",
+    "Z_GYRO",
     "", // needs to be initialized
     sample_z_gyro,
     IMU_SAMPLE_RATE, // 100 Hz
@@ -110,7 +111,7 @@ telem_channel_t telem_channels[] = {
     0
   },
   {
-    "GPS_SPEED",
+    "GPS_SPD",
     "", // needs to be initialized
     sample_speed,
     GPS_SAMPLE_RATE, // 0.2 Hz
@@ -147,7 +148,7 @@ void init_telemetry() {
 
   success = current_init();
   all_success &= success;
-  Serial.println("Battery Current: " + String(success));
+  Serial.println("Current Sensor: " + String(success));
 
   success = atmosphere_init();
   all_success &= success;
@@ -164,14 +165,14 @@ void init_telemetry() {
   if(all_success){
     digitalWrite(LEDpins[0], HIGH); // indicate the sensors initialized
   }
-  // else{
-  //   while(true){ // Blink the LED to indicate failure
-  //     digitalWrite(LEDpins[0], HIGH);
-  //     delay(ERR_PERIOD);
-  //     digitalWrite(LEDpins[0], LOW);
-  //     delay(ERR_PERIOD);
-  //   }
-  // }
+  else{
+    while(true){ // Blink the LED to indicate failure
+      digitalWrite(LEDpins[0], HIGH);
+      delay(ERR_PERIOD);
+      digitalWrite(LEDpins[0], LOW);
+      delay(ERR_PERIOD);
+    }
+  }
 
   success = gps_init();
   all_success &= success;
@@ -180,26 +181,13 @@ void init_telemetry() {
   if(all_success){
     digitalWrite(LEDpins[1], HIGH); // indicate the GPS initialized
   }
-  // else{
-  //   while(true){ // Blink the LED to indicate failure
-  //     digitalWrite(LEDpins[1], HIGH);
-  //     delay(ERR_PERIOD);
-  //     digitalWrite(LEDpins[1], LOW);
-  //     delay(ERR_PERIOD);
-  //   }
-  // }
-  
-  char flight_name[30];
-  sprintf(flight_name, "%d", flightname());
-  Serial.println(flight_name);
- 
-  // concat flight name with channel name into each channel log file name
-  for(int i = 0; i < N_TELEM_CHANNELS; i++) {
-    // start with flight name
-    strncpy(telem_channels[i].log_file_name, flight_name, 128);
-    // then add _[channel name]
-    strncat(telem_channels[i].log_file_name, "_", 128-strlen(telem_channels[i].log_file_name));
-    strncat(telem_channels[i].log_file_name, telem_channels[i].name, 128-strlen(telem_channels[i].log_file_name));
+  else{
+    while(true){ // Blink the LED to indicate failure
+      digitalWrite(LEDpins[1], HIGH);
+      delay(ERR_PERIOD);
+      digitalWrite(LEDpins[1], LOW);
+      delay(ERR_PERIOD);
+    }
   }
 
   // Initialize SD card
@@ -207,17 +195,34 @@ void init_telemetry() {
   all_success &= success;
   Serial.println("SD Card: " + String(success));
   
+  char flight_name[30];
+  uint32_t datetime[2];
+  flightname(datetime);
+
+  sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
+  Serial.println(flight_name);
+
+  // concat flight name with channel name into each channel log file name
+  for(int i = 0; i < N_TELEM_CHANNELS; i++) {
+    // start with flight name
+    strncpy(telem_channels[i].log_file_name, flight_name, 128);
+    // then add _[channel name]
+    strncat(telem_channels[i].log_file_name, "/", 128-strlen(telem_channels[i].log_file_name));
+    SD.mkdir(telem_channels[i].log_file_name);
+    strncat(telem_channels[i].log_file_name, telem_channels[i].name, 128-strlen(telem_channels[i].log_file_name));
+  }
+  
   if(all_success){
     digitalWrite(LEDpins[2], HIGH); // indicate the SD card initialized
   }
-  // else{
-  //   while(true){ // Blink the LED to indicate failure
-  //     digitalWrite(LEDpins[2], HIGH);
-  //     delay(ERR_PERIOD);
-  //     digitalWrite(LEDpins[2], LOW);
-  //     delay(ERR_PERIOD);
-  //   }
-  // }
+  else{
+    while(true){ // Blink the LED to indicate failure
+      digitalWrite(LEDpins[2], HIGH);
+      delay(ERR_PERIOD);
+      digitalWrite(LEDpins[2], LOW);
+      delay(ERR_PERIOD);
+    }
+  }
 
   // init interrupt?
 }
@@ -226,6 +231,8 @@ void init_telemetry() {
 // timestamp is stored as a 32-bit value followed by 32-bit float data point
 static void log_telem_point(telem_point_t data, telem_channel_t* channel) {
   File logfile = SD.open(channel->log_file_name, FILE_WRITE);
+  Serial.print("opened file ");
+  Serial.println(channel->log_file_name);
   // telemetry data and timestamp into bytes
   uint8_t data_buf[4];
   uint8_t timestamp_buf[4];

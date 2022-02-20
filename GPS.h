@@ -1,4 +1,5 @@
 #include "telemetry.h"
+#include <stdint.h>
 
 // CONSTANTS
 #define gpsPort Serial1
@@ -12,7 +13,7 @@
 // FUNCTIONS
 bool gps_init();
 void check_GPS_data();
-uint64_t flightname();
+void flightname(uint32_t* datetime);
 telem_point_t sample_latitude();       // record GPS latitude
 telem_point_t sample_longitude();      // record GPS longitude
 telem_point_t sample_altitude();       // record GPS altitude
