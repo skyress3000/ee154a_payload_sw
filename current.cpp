@@ -27,7 +27,7 @@ bool current_init(){
   // Take a current reading
   telem_point_t init_reading = sample_current();
   Serial.println(init_reading.data.data_value);
-  // Make sure the current is positive
+  // Make sure the current is above error thershold
   if(init_reading.data.data_value > 0.03){
     return true;
   }

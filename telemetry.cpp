@@ -90,6 +90,27 @@ telem_channel_t telem_channels[] = {
     0
   },
   {
+    "X_MAG",
+    "", // needs to be initialized
+    sample_x_mag,
+    IMU_SAMPLE_RATE, // 100 Hz
+    0
+  },
+  {
+    "Y_MAG",
+    "", // needs to be initialized
+    sample_y_mag,
+    IMU_SAMPLE_RATE, // 100 Hz
+    0
+  },
+  {
+    "Z_MAG",
+    "", // needs to be initialized
+    sample_z_mag,
+    IMU_SAMPLE_RATE, // 100 Hz
+    0
+  },
+  {
     "GPS_LAT",
     "", // needs to be initialized
     sample_latitude,
