@@ -7,6 +7,7 @@ TinyGPSPlus tinyGPS;
 uint8_t sampleFlags;
 
 bool gps_init(){
+  return true;
   // Initialize the GPS over the gpsPort
   gpsPort.begin(GPS_BAUD);
 
@@ -31,6 +32,7 @@ bool gps_init(){
 }
 
 void check_GPS_data(){
+  return;
   // Poll GPS until the location data updates
   gpsPort.flush(); // Wait for current communication to clear
 
@@ -51,6 +53,10 @@ telem_point_t sample_latitude(){
   // Read the latitude from the GPS
   telem_point_t data;
 
+  data.data.data_value = 3.14159;
+  data.timestamp = millis();  
+  return;
+
   // Check if we have sampled the reading
   if(sampleFlags & (1<<LAT_BIT)){
     check_GPS_data(); // Update the location
@@ -67,6 +73,10 @@ telem_point_t sample_latitude(){
 telem_point_t sample_longitude(){
   // Read the longitude from the GPS
   telem_point_t data;
+
+  data.data.data_value = 3.14159;
+  data.timestamp = millis();  
+  return;
 
   // Check if we have sampled the reading
   if(sampleFlags & (1<<LNG_BIT)){
@@ -85,6 +95,10 @@ telem_point_t sample_altitude(){
   // Read the altitude from the GPS (meters)
   telem_point_t data;
 
+  data.data.data_value = 3.14159;
+  data.timestamp = millis();  
+  return;
+
   // Check if we have sampled the reading
   if(sampleFlags & (1<<ALT_BIT)){
     check_GPS_data(); // Update the altitude
@@ -102,6 +116,10 @@ telem_point_t sample_speed(){
   // Read the speed from the GPS (meters per second)
   telem_point_t data;
 
+  data.data.data_value = 3.14159;
+  data.timestamp = millis();  
+  return;
+
   // Check if we have sampled the reading
   if(sampleFlags & (1<<SPD_BIT)){
     check_GPS_data(); // Update the speed
@@ -118,6 +136,11 @@ telem_point_t sample_speed(){
 telem_point_t sample_time(){
   // Read the time from the GPS (seconds)
   telem_point_t data;
+
+  data.data.data_value = 3.14159;
+  data.timestamp = millis();  
+  return;
+
   uint8_t hr, min, sec;
 
   // Check if we have sampled the reading
@@ -145,8 +168,10 @@ void flightname(uint32_t* datetime){
   check_GPS_data(); // Update the time
   sampleFlags |= (1<<TIM_BIT); // Set the bit to indicate we read the time
 
-  datetime[0] = tinyGPS.date.value();
-  datetime[1] = tinyGPS.time.value();
+  // datetime[0] = tinyGPS.date.value();
+  // datetime[1] = tinyGPS.time.value();
+  datetime[0] = 22022;
+  datetime[1] = 9303030;
 
   return;
 }
