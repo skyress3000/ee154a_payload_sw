@@ -7,7 +7,6 @@ TinyGPSPlus tinyGPS;
 uint8_t sampleFlags;
 
 bool gps_init(){
-  return true;
   // Initialize the GPS over the gpsPort
   gpsPort.begin(GPS_BAUD);
 
