@@ -221,7 +221,6 @@ void init_telemetry() {
   flightname(datetime);
 
   sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
-  Serial.println(flight_name);
 
   // concat flight name with channel name into each channel log file name
   for(int i = 0; i < N_TELEM_CHANNELS; i++) {
