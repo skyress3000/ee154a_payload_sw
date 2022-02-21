@@ -59,7 +59,7 @@ void loop() {
 
       csvfile.print(timestamp);
       csvfile.print(",");
-      csvfile.println(data.data_val);
+      csvfile.println(data.data_val, 10);
     }
 
     csvfile.close();
