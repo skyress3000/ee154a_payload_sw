@@ -252,8 +252,8 @@ void init_telemetry() {
 // timestamp is stored as a 32-bit value followed by 32-bit float data point
 static void log_telem_point(telem_point_t data, telem_channel_t* channel) {
   File logfile = SD.open(channel->log_file_name, FILE_WRITE);
-  Serial.print("opened file ");
-  Serial.println(channel->log_file_name);
+  //Serial.print("opened file ");
+  //Serial.println(channel->log_file_name);
   // telemetry data and timestamp into bytes
   uint8_t data_buf[4];
   uint8_t timestamp_buf[4];
