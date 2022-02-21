@@ -35,6 +35,8 @@ void loop() {
   // open specified file
   File logfile = SD.open(filename, FILE_READ);
   if(logfile) {
+    Serial.print("Decoding ");
+    Serial.println(filename);
     // add .csv for the decoded file
     String new_filename = filename + ".csv";
     File csvfile = SD.open(new_filename, FILE_WRITE);
