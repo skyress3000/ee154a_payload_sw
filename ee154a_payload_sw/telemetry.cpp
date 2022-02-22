@@ -8,155 +8,136 @@
 #include "atmosphere.h"
 #include "IMU.h"
 #include "voc.h"
-#include "LED.h"
+#include "PINS.h"
+
+File logfile;
 
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
   {
-    "BAT_CUR",
-    "", // needs to be initialized
+    'B', // B for Battery current
     sample_current,
-    BAT_I_SAMPLE_RATE, // 10 Hz
+    BAT_I_SAMPLE_RATE, // 0.2 Hz
     0
   },
   {
-    "PRESS",
-    "", // needs to be initialized
+    'P', // Pressure
     sample_pressure,
-    ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
     0
   },
   {
-    "HUMID",
-    "", // needs to be initialized
+    'H', // Humidity
     sample_humidity,
-    ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
     0
   },
   {
-    "T_INT",
-    "", // needs to be initialized
+    't', // Internal temperature
     sample_temp_internal,
-    ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
     0
   },
   {
-    "T_EXT",
-    "", // needs to be initialized
+    'T', // External Temperature
     sample_temp_external,
-    ATMOSPHERIC_SAMPLE_RATE, // 10 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
     0
   },
   {
-    "X_ACCEL",
-    "", // needs to be initialized
+    'i', // X acceleration
     sample_x_accel,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "Y_ACCEL",
-    "", // needs to be initialized
+    'j', // y acceleration
     sample_y_accel,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "Z_ACCEL",
-    "", // needs to be initialized
+    'k', // z acceleration
     sample_z_accel,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "X_GYRO",
-    "", // needs to be initialized
+    'l', // x gyro
     sample_x_gyro,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "Y_GYRO",
-    "", // needs to be initialized
+    'm', // y gyro
     sample_y_gyro,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "Z_GYRO",
-    "", // needs to be initialized
+    'o', // z gyro
     sample_z_gyro,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "X_MAG",
-    "", // needs to be initialized
+    'p', // x magnetometer
     sample_x_mag,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "Y_MAG",
-    "", // needs to be initialized
+    'q', // y magnetometer
     sample_y_mag,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "Z_MAG",
-    "", // needs to be initialized
+    'r', // z magnetometer
     sample_z_mag,
-    IMU_SAMPLE_RATE, // 100 Hz
+    IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    "GPS_LAT",
-    "", // needs to be initialized
+    'L', // Latitude
     sample_latitude,
-    GPS_SAMPLE_RATE, // 0.2 Hz
+    GPS_SAMPLE_RATE, // 0.1 Hz
     0
   },
   {
-    "GPS_LONG",
-    "", // needs to be initialized
+    'l', // Longitude
     sample_longitude,
-    GPS_SAMPLE_RATE, // 0.2 Hz
+    GPS_SAMPLE_RATE, // 0.1 Hz
     0
   },
   {
-    "GPS_ALT",
-    "", // needs to be initialized
+    'A', // Altitude
     sample_altitude,
-    GPS_SAMPLE_RATE, // 0.2 Hz
+    GPS_SAMPLE_RATE, // 0.1 Hz
     0
   },
   {
-    "GPS_SPD",
-    "", // needs to be initialized
+    'S', // Speed
     sample_speed,
-    GPS_SAMPLE_RATE, // 0.2 Hz
+    GPS_SAMPLE_RATE, // 0.1 Hz
     0
   },
   {
-    "GPS_TIME",
-    "", // needs to be initialized
+    'I', // GPS Time
     sample_time,
-    GPS_SAMPLE_RATE, // 0.2 Hz
+    GPS_SAMPLE_RATE, // 0.1 Hz
     0
   },
   {
-    "SGP_TVOC",
-    "", // needs to be initialized
+    'V', // VOC
     sample_tvoc,
-    TVOC_SAMPLE_RATE, // 10 Hz
+    TVOC_SAMPLE_RATE, // 0.2 Hz
     0
   },
     {
-    "SGP_eCO2",
-    "", // needs to be initialized
+    'C', // eCO2
     sample_eco2,
-    TVOC_SAMPLE_RATE, // 10 Hz
+    TVOC_SAMPLE_RATE, // 0.2 Hz
     0
   },
 };
@@ -216,21 +197,17 @@ void init_telemetry() {
   all_success &= success;
   Serial.println("SD Card: " + String(success));
   
-  char flight_name[30];
+  char flight_name[128];
   uint32_t datetime[2];
   flightname(datetime);
 
   sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
 
-  // concat flight name with channel name into each channel log file name
-  for(int i = 0; i < N_TELEM_CHANNELS; i++) {
-    // start with flight name
-    strncpy(telem_channels[i].log_file_name, flight_name, 128);
-    // then add _[channel name]
-    strncat(telem_channels[i].log_file_name, "/", 128-strlen(telem_channels[i].log_file_name));
-    SD.mkdir(telem_channels[i].log_file_name);
-    strncat(telem_channels[i].log_file_name, telem_channels[i].name, 128-strlen(telem_channels[i].log_file_name));
-  }
+  // concat flight name with channel name into log file name
+  strncat(flight_name, "/LOG", 128-strlen(flight_name));
+  Serial.println(flight_name);
+  SD.mkdir(flight_name);
+
   
   if(all_success){
     digitalWrite(LEDpins[2], HIGH); // indicate the SD card initialized
@@ -244,15 +221,13 @@ void init_telemetry() {
     }
   }
 
-  // init interrupt?
+  // Open the file and keep it open
+  logfile = SD.open(flight_name, O_CREAT | O_WRITE);
 }
 
-// store a single datapoint on the SD card, in the log file for the specified channel
+// store a single datapoint on the SD card, in the log file with the identity byte indicating which data was read
 // timestamp is stored as a 32-bit value followed by 32-bit float data point
-static void log_telem_point(telem_point_t data, telem_channel_t* channel) {
-  File logfile = SD.open(channel->log_file_name, FILE_WRITE);
-  //Serial.print("opened file ");
-  //Serial.println(channel->log_file_name);
+static void log_telem_point(telem_point_t data, uint8_t identity) {
   // telemetry data and timestamp into bytes
   uint8_t data_buf[4];
   uint8_t timestamp_buf[4];
@@ -262,9 +237,9 @@ static void log_telem_point(telem_point_t data, telem_channel_t* channel) {
     timestamp_buf[i] = (data.timestamp >> (8*i)) & 0xFF;
   }
   // write data to logfile
+  logfile.write(identity);
   logfile.write(timestamp_buf, 4);
   logfile.write(data_buf, 4);
-  logfile.close();
 }
 
 void do_telemetry_sampling() {
@@ -277,7 +252,21 @@ void do_telemetry_sampling() {
       // time for a new sample
       telem_point_t data_point = telem_channels[i].sample_channel();
       // log it
-      log_telem_point(data_point, &telem_channels[i]);
+      log_telem_point(data_point, telem_channels[i].log_flag);
+    }
+  }
+}
+
+void stop_telemetry() {
+  logfile.close();
+  while(1){
+    for(int i = 0; i < N_LED; i++){
+      digitalWrite(LEDpins[i], HIGH);
+      delay(500);
+    }
+    for(int i = 0; i < N_LED; i++){
+      digitalWrite(LEDpins[i], LOW);
+      delay(500);
     }
   }
 }
