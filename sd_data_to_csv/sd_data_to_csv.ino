@@ -26,9 +26,9 @@ void setup() {
 
 void loop() {
   Serial.println("Choose a file to decode to CSV:");
-  while(!Serial.available()) {}; // wait for data to appear on serial bus
-  String filename = Serial.readString(); // Read the filename
-
+  // while(!Serial.available()) {}; // wait for data to appear on serial bus
+  // String filename = Serial.readString(); // Read the filename
+  String filename = "22222/14403030/LOG";
   // open specified file
   File logfile = SD.open(filename, FILE_READ);
   if(logfile) {
@@ -51,6 +51,7 @@ void loop() {
 
       // Open the corresponding CSV file
       String new_filename = String(id) + ".csv";
+      Serial.println(new_filename);
       File csvfile = SD.open(new_filename, FILE_WRITE);
       csvfile.print(timestamp);
       csvfile.print(",");
@@ -63,6 +64,8 @@ void loop() {
     Serial.print("Failed to open ");
     Serial.println(filename);
   }
+  Serial.println("Done");
+  while(1);
 }
 
 // from example

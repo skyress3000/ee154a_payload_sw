@@ -223,6 +223,8 @@ void init_telemetry() {
 
   // Open the file and keep it open
   logfile = SD.open(flight_name, O_CREAT | O_WRITE);
+  logfile.write("123456789"); // write dummy data - must be 9 bytes
+
 }
 
 // store a single datapoint on the SD card, in the log file with the identity byte indicating which data was read
