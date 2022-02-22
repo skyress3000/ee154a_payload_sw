@@ -105,7 +105,7 @@ telem_channel_t telem_channels[] = {
     0
   },
   {
-    'l', // Longitude
+    'O', // Longitude
     sample_longitude,
     GPS_SAMPLE_RATE, // 0.1 Hz
     0
@@ -259,6 +259,9 @@ void do_telemetry_sampling() {
 
 void stop_telemetry() {
   logfile.close();
+  digitalWrite(BUZZ_PIN, HIGH);
+  delay(500);
+  digitalWrite(BUZZ_PIN, LOW);
   while(1){
     for(int i = 0; i < N_LED; i++){
       digitalWrite(LEDpins[i], HIGH);
