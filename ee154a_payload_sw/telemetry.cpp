@@ -202,11 +202,11 @@ void init_telemetry() {
   flightname(datetime);
 
   sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
-
+  SD.mkdir(flight_name);
   // concat flight name with channel name into log file name
   strncat(flight_name, "/LOG", 128-strlen(flight_name));
   Serial.println(flight_name);
-  SD.mkdir(flight_name);
+  
 
   
   if(all_success){
@@ -223,7 +223,7 @@ void init_telemetry() {
 
   // Open the file and keep it open
   logfile = SD.open(flight_name, O_CREAT | O_WRITE);
-  logfile.write("123456789"); // write dummy data - must be 9 bytes
+  logfile.write("qqqqqqqqq"); // write dummy data - must be 9 bytes
 
 }
 
