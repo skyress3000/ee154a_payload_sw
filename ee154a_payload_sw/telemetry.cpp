@@ -33,7 +33,7 @@ telem_channel_t telem_channels[] = {
     0
   },
   {
-    't', // Internal temperature
+    'M', // Internal temperature
     sample_temp_internal,
     ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
     0
@@ -45,55 +45,55 @@ telem_channel_t telem_channels[] = {
     0
   },
   {
-    'i', // X acceleration
+    '1', // X acceleration
     sample_x_accel,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'j', // y acceleration
+    '2', // y acceleration
     sample_y_accel,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'k', // z acceleration
+    '3', // z acceleration
     sample_z_accel,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'l', // x gyro
+    '4', // x gyro
     sample_x_gyro,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'm', // y gyro
+    '5', // y gyro
     sample_y_gyro,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'o', // z gyro
+    '6', // z gyro
     sample_z_gyro,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'p', // x magnetometer
+    '7', // x magnetometer
     sample_x_mag,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'q', // y magnetometer
+    '8', // y magnetometer
     sample_y_mag,
     IMU_SAMPLE_RATE, // 10 Hz
     0
   },
   {
-    'r', // z magnetometer
+    '9', // z magnetometer
     sample_z_mag,
     IMU_SAMPLE_RATE, // 10 Hz
     0
