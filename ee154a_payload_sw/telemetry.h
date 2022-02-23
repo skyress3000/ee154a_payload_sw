@@ -41,7 +41,7 @@ typedef struct {
 
 // a telemetry channel
 typedef struct {
-  uint8_t log_flag;                         // flag indicating which sensor read this data
+  char log_flag;                            // flag indicating which sensor read this data - will be used as filename; must be a captial letter or number
   telem_point_t (*sample_channel)();        // function to record a data point from the channel
   const uint32_t sample_period;             // period to (nominally) sample this channel, in ms
   uint32_t last_sample;                     // timestamp of last sample
