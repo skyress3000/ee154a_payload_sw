@@ -14,7 +14,7 @@ void stop_telemetry();
 // data rate shared by all atmospheric telemetry channels (in ms)
 #define ATMOSPHERIC_SAMPLE_RATE 1000 // 1 Hz
 // data rate shared by all IMU telemetry channels (in ms)
-#define IMU_SAMPLE_RATE 200 // 20 Hz
+#define IMU_SAMPLE_RATE 50 // 20 Hz
 // data rate for battery current measurement (in ms)
 #define BAT_I_SAMPLE_RATE 1000 // 1 Hz
 // data rate shared by all GPS telemetry channels (in ms)
