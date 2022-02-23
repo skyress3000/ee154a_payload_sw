@@ -17,127 +17,127 @@ telem_channel_t telem_channels[] = {
   {
     'B', // B for Battery current
     sample_current,
-    BAT_I_SAMPLE_RATE, // 0.2 Hz
+    BAT_I_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'P', // Pressure
     sample_pressure,
-    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'H', // Humidity
     sample_humidity,
-    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'M', // Internal temperature
     sample_temp_internal,
-    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'T', // External Temperature
     sample_temp_external,
-    ATMOSPHERIC_SAMPLE_RATE, // 0.2 Hz
+    ATMOSPHERIC_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     '1', // X acceleration
     sample_x_accel,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '2', // y acceleration
     sample_y_accel,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '3', // z acceleration
     sample_z_accel,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '4', // x gyro
     sample_x_gyro,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '5', // y gyro
     sample_y_gyro,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '6', // z gyro
     sample_z_gyro,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '7', // x magnetometer
     sample_x_mag,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '8', // y magnetometer
     sample_y_mag,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     '9', // z magnetometer
     sample_z_mag,
-    IMU_SAMPLE_RATE, // 10 Hz
+    IMU_SAMPLE_RATE, // 20 Hz
     0
   },
   {
     'L', // Latitude
     sample_latitude,
-    GPS_SAMPLE_RATE, // 0.1 Hz
+    GPS_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'O', // Longitude
     sample_longitude,
-    GPS_SAMPLE_RATE, // 0.1 Hz
+    GPS_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'A', // Altitude
     sample_altitude,
-    GPS_SAMPLE_RATE, // 0.1 Hz
+    GPS_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'S', // Speed
     sample_speed,
-    GPS_SAMPLE_RATE, // 0.1 Hz
+    GPS_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'I', // GPS Time
     sample_time,
-    GPS_SAMPLE_RATE, // 0.1 Hz
+    GPS_SAMPLE_RATE, // 1 Hz
     0
   },
   {
     'V', // VOC
     sample_tvoc,
-    TVOC_SAMPLE_RATE, // 0.2 Hz
+    TVOC_SAMPLE_RATE, // 1 Hz
     0
   },
     {
     'C', // eCO2
     sample_eco2,
-    TVOC_SAMPLE_RATE, // 0.2 Hz
+    TVOC_SAMPLE_RATE, // 1 Hz
     0
   },
 };

@@ -12,15 +12,15 @@ void stop_telemetry();
 // CONSTANTS
 
 // data rate shared by all atmospheric telemetry channels (in ms)
-#define ATMOSPHERIC_SAMPLE_RATE 5000 // 0.2 Hz
+#define ATMOSPHERIC_SAMPLE_RATE 1000 // 1 Hz
 // data rate shared by all IMU telemetry channels (in ms)
-#define IMU_SAMPLE_RATE 100 // 10 Hz
+#define IMU_SAMPLE_RATE 200 // 20 Hz
 // data rate for battery current measurement (in ms)
-#define BAT_I_SAMPLE_RATE 5000 // 0.2 Hz
+#define BAT_I_SAMPLE_RATE 1000 // 1 Hz
 // data rate shared by all GPS telemetry channels (in ms)
-#define GPS_SAMPLE_RATE 10000 // 0.1 Hz
+#define GPS_SAMPLE_RATE 1000 // 1 Hz
 // data rate for reading from VOC sensor (in ms)
-#define TVOC_SAMPLE_RATE 5000 // 0.2 Hz
+#define TVOC_SAMPLE_RATE 1000 // 1 Hz
 
 // total number of telemetry channels
 #define N_TELEM_CHANNELS 21
