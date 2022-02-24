@@ -11,7 +11,10 @@
 #include "thermistor.h"
 #include "PINS.h"
 
-File logfile;
+File logfile; // File object and filename are shared variables
+char flight_name[128]; 
+int idx = 0;
+uint32_t last_filetime;
 
 // list of all telemetry channels we record
 telem_channel_t telem_channels[] = {
@@ -204,16 +207,20 @@ void init_telemetry() {
   all_success &= success;
   Serial.println("SD Card: " + String(success));
   
-  char flight_name[128];
   uint32_t datetime[2];
   flightname(datetime);
 
   sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
   SD.mkdir(flight_name);
+  char filename[128];
+  strcpy(filename, flight_name); 
   // concat flight name with channel name into log file name
-  strncat(flight_name, "/LOG", 128-strlen(flight_name));
-  Serial.println(flight_name);
-  
+  strncat(filename, "/LOG", 128-strlen(filename));
+  char fileidx[5];
+  sprintf(fileidx, "%d", idx);
+  strncat(filename, fileidx, 128-strlen(filename));
+  Serial.println(filename);
+  last_filetime = millis();
 
   
   if(all_success){
@@ -229,9 +236,7 @@ void init_telemetry() {
   }
 
   // Open the file and keep it open
-  logfile = SD.open(flight_name, O_CREAT | O_WRITE);
-  logfile.write("qqqqqqqqq"); // write dummy data - must be 9 bytes
-
+  logfile = SD.open(filename, O_CREAT | O_WRITE);
 }
 
 // store a single datapoint on the SD card, in the log file with the identity byte indicating which data was read
@@ -251,7 +256,27 @@ static void log_telem_point(telem_point_t data, uint8_t identity) {
   logfile.write(data_buf, 4);
 }
 
+void renew_file(){
+  // Close the current file and open a new one with an incremented file name 
+  logfile.close();
+  // Create the new filename
+  char filename[128];
+  strcpy(filename, flight_name); 
+  idx++;
+  char fileidx[5];
+  sprintf(fileidx, "%d", idx);
+  strncat(filename, fileidx, 128-strlen(filename));
+  // Open the new file
+  logfile = SD.open(filename, O_CREAT | O_WRITE);
+}
+
 void do_telemetry_sampling() {
+  // Check if it's time to make a new file
+  if(millis() - (last_filetime % NEW_FILE_PERIOD) > NEW_FILE_PERIOD) {
+    last_filetime = millis();
+    renew_file();
+  }
+
   for(int i = 0; i < N_TELEM_CHANNELS; i++) {
     // check if it has been at least sampling period since the last sample
     // measured since last time mod period to avoid drift

@@ -26,7 +26,8 @@ void stop_telemetry();
 #define N_TELEM_CHANNELS 22
 
 #define CS_PIN 10
-#define ERR_PERIOD 500
+#define NEW_FILE_PERIOD 600000 // Make a new file every 10 minutes
+#define ERR_PERIOD 500 // LED blink period
 
 // TYPEDEFS
 
