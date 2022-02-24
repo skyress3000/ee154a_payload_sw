@@ -212,13 +212,10 @@ void init_telemetry() {
 
   sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
   SD.mkdir(flight_name);
+  // Create the new filename
   char filename[128];
-  strcpy(filename, flight_name); 
   // concat flight name with channel name into log file name
-  strncat(filename, "/LOG", 128-strlen(filename));
-  char fileidx[5];
-  sprintf(fileidx, "%d", idx);
-  strncat(filename, fileidx, 128-strlen(filename));
+  sprintf(filename, "%s/LOG%d", flight_name, idx);
   Serial.println(filename);
   last_filetime = millis();
 
@@ -259,13 +256,11 @@ static void log_telem_point(telem_point_t data, uint8_t identity) {
 void renew_file(){
   // Close the current file and open a new one with an incremented file name 
   logfile.close();
+  idx++;
   // Create the new filename
   char filename[128];
-  strcpy(filename, flight_name); 
-  idx++;
-  char fileidx[5];
-  sprintf(fileidx, "%d", idx);
-  strncat(filename, fileidx, 128-strlen(filename));
+  // concat flight name with channel name into log file name
+  sprintf(filename, "%s/LOG%d", flight_name, idx);
   // Open the new file
   logfile = SD.open(filename, O_CREAT | O_WRITE);
 }
