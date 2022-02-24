@@ -272,7 +272,8 @@ void renew_file(){
 
 void do_telemetry_sampling() {
   // Check if it's time to make a new file
-  if(millis() - (last_filetime % NEW_FILE_PERIOD) > NEW_FILE_PERIOD) {
+  uint32_t file_time = last_filetime - (last_filetime % NEW_FILE_PERIOD);
+  if(millis() - file_time > NEW_FILE_PERIOD) {
     last_filetime = millis();
     renew_file();
   }
