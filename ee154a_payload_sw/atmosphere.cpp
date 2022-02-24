@@ -49,7 +49,7 @@ telem_point_t sample_temp_external(){
   return data;
 }
 
-telem_point_t sample_temp_internal(){
+telem_point_t sample_temp_bat(){
   // record BME280 temperature (C) from the internal sensor by the battery
   telem_point_t data;
 

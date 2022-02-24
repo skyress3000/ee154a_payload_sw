@@ -8,6 +8,7 @@
 #include "atmosphere.h"
 #include "IMU.h"
 #include "voc.h"
+#include "thermistor.h"
 #include "PINS.h"
 
 File logfile;
@@ -33,7 +34,13 @@ telem_channel_t telem_channels[] = {
     0
   },
   {
-    'M', // Internal temperature
+    'M', // Battery temperature
+    sample_temp_bat,
+    ATMOSPHERIC_SAMPLE_RATE, // 2 Hz
+    0
+  },
+  {
+    'N', // Internal temperature
     sample_temp_internal,
     ATMOSPHERIC_SAMPLE_RATE, // 2 Hz
     0

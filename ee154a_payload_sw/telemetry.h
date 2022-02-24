@@ -23,7 +23,7 @@ void stop_telemetry();
 #define TVOC_SAMPLE_RATE 500 // 2 Hz
 
 // total number of telemetry channels
-#define N_TELEM_CHANNELS 21
+#define N_TELEM_CHANNELS 22
 
 #define CS_PIN 10
 #define ERR_PERIOD 500
