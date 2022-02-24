@@ -279,10 +279,11 @@ void do_telemetry_sampling() {
 
   for(int i = 0; i < N_TELEM_CHANNELS; i++) {
     // check if it has been at least sampling period since the last sample
-    // measured since last time mod period to avoid drift
+    // measured since last multiple of period to avoid drift
     // e.g. if we have 5 ms of overhead in the measurement and wait 100ms we'd get 0ms, 105ms, 210ms, etc...
     // instead this way we get 0ms, 105ms, 205ms, etc...
-    if(millis() - (telem_channels[i].last_sample % telem_channels[i].sample_period) > telem_channels[i].sample_period) {
+    uint32_t corrected_time = telem_channels[i].last_sample - (telem_channels[i].last_sample % telem_channels[i].sample_period);
+    if(millis() - corrected_time > telem_channels[i].sample_period) {
       // update last sample 
       telem_channels[i].last_sample = millis();
       // time for a new sample
