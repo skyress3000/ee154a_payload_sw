@@ -17,7 +17,7 @@ telem_point_t sample_temp_internal(){
   float voltage = read * (3.3/1023.0);
   float R = (2000 * voltage)/(1 - voltage/3.3);
   float T = pow(a1 + b1 * log(R/Rref) + c1 * pow(log(R/Rref),2) + d1 * pow(log(R/Rref),3), -1) - 273.15 - 1.32;
-  data.data.data_value = read;
+  data.data.data_value = T;
     
   return data;
 }
