@@ -3,7 +3,7 @@
 #include <Wire.h>
 #include "SparkFunBME280.h"
 
-BME280 internalSensor;
+BME280 batterySensor;
 BME280 externalSensor;
 
 bool atmosphere_init(){
@@ -12,8 +12,8 @@ bool atmosphere_init(){
 
   externalSensor.setI2CAddress(ADDR_EXTERNAL);
   bool ext_success = externalSensor.beginI2C();
-  internalSensor.setI2CAddress(ADDR_INTERNAL);
-  bool int_success = internalSensor.beginI2C();
+  batterySensor.setI2CAddress(ADDR_INTERNAL);
+  bool int_success = batterySensor.beginI2C();
 
   // Return true only if the external AND internal sensors are successfully initialized
   return (ext_success && int_success);
@@ -53,7 +53,7 @@ telem_point_t sample_temp_bat(){
   // record BME280 temperature (C) from the internal sensor by the battery
   telem_point_t data;
 
-  data.data.data_value = internalSensor.readTempC();
+  data.data.data_value = batterySensor.readTempC();
   data.timestamp = millis();
 
   return data;

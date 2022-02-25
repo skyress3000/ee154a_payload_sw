@@ -8,7 +8,7 @@
 #include "atmosphere.h"
 #include "IMU.h"
 #include "voc.h"
-#include "thermistor.h"
+#include "internal.h"
 #include "PINS.h"
 
 File logfile; // File object and filename are shared variables
@@ -161,10 +161,14 @@ void init_telemetry() {
   success = current_init();
   all_success &= success;
   Serial.println("Current Sensor: " + String(success));
-
+  
   success = atmosphere_init();
   all_success &= success;
-  Serial.println("BME280 sensors: " + String(success)); 
+  Serial.println("Battery + External BME280 sensors: " + String(success)); 
+
+  success = internal_init();
+  all_success &= success;
+  Serial.println("Internal BME280 sensor: " + String(success)); 
 
   success = imu_init();
   all_success &= success;
@@ -263,9 +267,11 @@ void renew_file(){
   char filename[128];
   strcpy(filename, flight_name); 
   idx++;
+  strncat(filename, "/LOG", 128-strlen(filename));
   char fileidx[5];
   sprintf(fileidx, "%d", idx);
   strncat(filename, fileidx, 128-strlen(filename));
+  Serial.println(filename);
   // Open the new file
   logfile = SD.open(filename, O_CREAT | O_WRITE);
 }
