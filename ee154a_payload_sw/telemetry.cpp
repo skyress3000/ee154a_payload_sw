@@ -265,7 +265,10 @@ void renew_file(){
   // Create the new filename
   char filename[128];
   // concat flight name with channel name into log file name
+  idx++;
   sprintf(filename, "%s/LOG%d", flight_name, idx);
+  Serial.print("Made new file ");
+  Serial.println(filename);
   // Open the new file
   logfile = SD.open(filename, O_CREAT | O_WRITE);
 }

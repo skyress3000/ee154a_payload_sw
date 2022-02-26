@@ -41,7 +41,7 @@ bool gps_init(){
   // Clear sampleFlags to indicate nothing has been sampled from this reading
   sampleFlags = 0;
 
-  return true;
+  return !gps_disable; // return true of the gps isn't disabled 
 }
 
 bool check_GPS_data(){
