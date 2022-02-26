@@ -181,30 +181,32 @@ void init_telemetry() {
   if(all_success){
     digitalWrite(LEDpins[0], HIGH); // indicate the sensors initialized
   }
-  else{
-    while(true){ // Blink the LED to indicate failure
-      digitalWrite(LEDpins[0], HIGH);
-      delay(ERR_PERIOD);
-      digitalWrite(LEDpins[0], LOW);
-      delay(ERR_PERIOD);
-    }
-  }
+  /// Keep LED off to indicate failure
+  // else{
+  //   while(true){ // Blink the LED to indicate failure
+  //     digitalWrite(LEDpins[0], HIGH);
+  //     delay(ERR_PERIOD);
+  //     digitalWrite(LEDpins[0], LOW);
+  //     delay(ERR_PERIOD);
+  //   }
+  // }
 
   success = gps_init();
   all_success &= success;
   Serial.println("GPS: " + String(success));
 
-  if(all_success){
+  if(success){
     digitalWrite(LEDpins[1], HIGH); // indicate the GPS initialized
   }
-  else{
-    while(true){ // Blink the LED to indicate failure
-      digitalWrite(LEDpins[1], HIGH);
-      delay(ERR_PERIOD);
-      digitalWrite(LEDpins[1], LOW);
-      delay(ERR_PERIOD);
-    }
-  }
+  /// Keep LED off to indicate failure
+  // else{
+  //   while(true){ // Blink the LED to indicate failure
+  //     digitalWrite(LEDpins[1], HIGH);
+  //     delay(ERR_PERIOD);
+  //     digitalWrite(LEDpins[1], LOW);
+  //     delay(ERR_PERIOD);
+  //   }
+  // }
 
   // Initialize SD card
   success = SD.begin(CS_PIN);
@@ -224,11 +226,11 @@ void init_telemetry() {
   last_filetime = millis();
 
   
-  if(all_success){
+  if(success){
     digitalWrite(LEDpins[2], HIGH); // indicate the SD card initialized
   }
   else{
-    while(true){ // Blink the LED to indicate failure
+    while(true){ // Blink the LED to indicate failure; no point in continuing if SD card failed
       digitalWrite(LEDpins[2], HIGH);
       delay(ERR_PERIOD);
       digitalWrite(LEDpins[2], LOW);
