@@ -9,9 +9,9 @@
 #define ALT_BIT 2
 #define SPD_BIT 3
 #define TIM_BIT 4
-#define GPS_TIMEOUT 5000 // Disable the GPS if it takes longer than this to connect
-#define CURRENT_DATE 22422
-#define CURRENT_TIME 17024030
+#define GPS_TIMEOUT  900000 // Disable the GPS if it takes longer than this to connect
+#define CURRENT_DATE 22622
+#define CURRENT_TIME 164030
 
 // FUNCTIONS
 bool gps_init();
