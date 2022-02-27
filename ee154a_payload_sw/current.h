@@ -3,8 +3,8 @@
 
 // CONSTANTS
 #define CURRENT_PIN    A0
-#define CURRENT_OFFSET 1023
-#define CURRENT_GAIN   (float)(-1500)
+#define CURRENT_OFFSET 911
+#define CURRENT_GAIN   (float)(-875.481)
 #define N_AVG          32
 
 // FUNCTIONS
