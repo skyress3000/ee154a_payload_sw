@@ -211,12 +211,23 @@ void init_telemetry() {
   // Initialize SD card
   success = SD.begin(CS_PIN);
   all_success &= success;
-  Serial.println("SD Card: " + String(success));
-  
+  Serial.println("SD Card: " + String(success));  
+  // Get date + time
   uint32_t datetime[2];
   flightname(datetime);
 
   sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
+  // Check if directory exists
+  while(SD.exists(flight_name)){
+    // If the directory already exists, increment the time and check again until we have a new directory name
+    Serial.print("File ");
+    Serial.print(flight_name);
+    Serial.print(" exists, trying ");
+    datetime[1]++;
+    sprintf(flight_name, "%"PRIu32"/%"PRIu32 , datetime[0], datetime[1]);
+    Serial.println(flight_name);
+  }
+
   SD.mkdir(flight_name);
   // Create the new filename
   char filename[128];
